@@ -25,28 +25,18 @@
     nerdfonts
     nixpkgs-fmt
     nodejs_18
+    podman-desktop
+    rustup
     rnix-lsp
     thefuck
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
-    # pkgs.hello
-
-    # # It is sometimes useful to fine-tune packages, for example, by applying
-    # # overrides. You can do that directly here, just don't forget the
-    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-    # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
-
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.username}!"
-    # '')
   ];
 
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
     "ngrok"
+  ];
+
+  nixpkgs.overlays = [
+    (import ./overlays)
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -64,19 +54,8 @@
     # '';
   };
 
-  # You can also manage environment variables but you will have to manually
-  # source
-  #
-  #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  /etc/profiles/per-user/kevinbernfeld/etc/profile.d/hm-session-vars.sh
-  #
-  # if you don't want to manage your shell through Home Manager.
   home.sessionVariables = {
     EDITOR = "nvim";
-    DIGITALOCEAN_ACCESS_TOKEN = "dop_v1_03d1d8b00be980461e4122d6af284578ebf03b53de02004e9d5ec36505772197";
   };
 
   # Let Home Manager install and manage itself.
