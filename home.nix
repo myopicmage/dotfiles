@@ -24,7 +24,6 @@
     gnupg
     nerdfonts
     nixpkgs-fmt
-    # ngrok
     nodejs_18
     rnix-lsp
     thefuck
@@ -44,6 +43,10 @@
     # (pkgs.writeShellScriptBin "my-hello" ''
     #   echo "Hello, ${config.username}!"
     # '')
+  ];
+
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "ngrok"
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
