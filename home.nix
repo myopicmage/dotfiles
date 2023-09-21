@@ -25,7 +25,6 @@
     nerdfonts
     nixpkgs-fmt
     nodejs_18
-    podman-desktop
     rustup
     rnix-lsp
     thefuck
@@ -33,10 +32,6 @@
 
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
     "ngrok"
-  ];
-
-  nixpkgs.overlays = [
-    (import ./overlays)
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
