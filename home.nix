@@ -13,8 +13,12 @@
   # release notes.
   home.stateVersion = "23.05"; # Please read the comment before changing.
 
-  # The packages option allows you to install Nix packages into your
-  # environment.
+  # explicitly allow these unfree packages
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "ngrok"
+    "slack"
+  ];
+
   home.packages = with pkgs; [
     bash
     doctl
@@ -23,15 +27,13 @@
     git
     gnupg
     nerdfonts
+    ngrok
     nixpkgs-fmt
     nodejs_18
     rustup
     rnix-lsp
+    slack
     thefuck
-  ];
-
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "ngrok"
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -85,6 +87,7 @@
 
       export PATH="/Users/kevinbernfeld/.local/bin:$PATH"
       export PATH="/usr/local/opt/tcl-tk/bin:$PATH"
+      export SLACK_DEVELOPER_MENU=true
     '';
     oh-my-zsh = {
       enable = true;
