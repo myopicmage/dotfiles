@@ -50,7 +50,6 @@
     enable = true;
     onActivation.autoUpdate = true;
     casks = [
-      "launchcontrol"
       "podman-desktop"
     ];
   };
