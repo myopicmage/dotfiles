@@ -20,6 +20,7 @@
     flyctl
     git
     gnupg
+    heroku
     nerdfonts
     ngrok
     nixpkgs-fmt
@@ -94,5 +95,9 @@
     shellAliases = {
       ls = "eza";
     };
+  };
+
+  xdg = {
+    enable = true;
   };
 }

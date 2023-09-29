@@ -11,6 +11,7 @@
 
   # Create /etc/zshrc that loads the nix-darwin environment.
   programs.zsh.enable = true; # default shell on catalina
+  programs.bash.enable = false;
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
@@ -42,19 +43,19 @@
     # Auto upgrade nix package and the daemon service.
     nix-daemon = {
       enable = true;
-      # nix.package = pkgs.nix;
-    };
-
-    postgresql = {
-      enable = true;
-      package = pkgs.postgresql_15;
-      enableTCPIP = true;
-      authentication = pkgs.lib.mkOverride 10 ''
-        # type  database  DBuser  origin-address  auth-method
-        local   all       all                     trust
-        host    all       all     127.0.0.1/32    trust
-        host    all       all     ::1/128         trust
-      '';
     };
   };
+
+  homebrew = {
+    enable = true;
+    onActivation.autoUpdate = true;
+    casks = [
+      "launchcontrol"
+      "podman-desktop"
+    ];
+  };
+
+  imports = [
+    # ./services/postgres.nix
+  ];
 }
