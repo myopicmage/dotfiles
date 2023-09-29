@@ -71,7 +71,27 @@
       "shell.nix"
       ".direnv/"
       ".envrc"
+      ".DS_Store"
     ];
+    signing = {
+      key = "CB1A14912E30CC44";
+      signByDefault = true;
+    };
+    extraConfig = {
+      core = {
+        excludesfile = "${config.xdg.configHome}/git/config/ignore";
+      };
+      init = {
+        defaultbranch = "main";
+      };
+      pull = {
+        rebase = false;
+      };
+      push = {
+        default = "current";
+        autosetupremote = true;
+      };
+    };
   };
 
   programs.zsh = {
@@ -80,7 +100,7 @@
     initExtra = ''
       bindkey -v
 
-      export PATH="/Users/kevinbernfeld/.local/bin:$PATH"
+      export PATH="/Users/kevin/.local/bin:$PATH"
       export PATH="/usr/local/opt/tcl-tk/bin:$PATH"
       export SLACK_DEVELOPER_MENU=true
     '';

@@ -16,6 +16,17 @@
   };
 
   outputs = inputs @ { self, ... }:
+    let
+      darwinImports = [
+              ./config.nix
+              self.darwinModules.home-manager
+              {
+                home-manager.users.kevin = {
+                  imports = [ ./home.nix ];
+                };
+              }
+            ];
+    in
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [
         "x86_64-darwin"
@@ -28,27 +39,11 @@
         darwinConfigurations = {
           "ki9" = self.nixos-flake.lib.mkMacosSystem {
             nixpkgs.hostPlatform = "x86_64-darwin";
-            imports = [
-              ./config.nix
-              self.darwinModules.home-manager
-              {
-                home-manager.users.kevinbernfeld = {
-                  imports = [ ./home.nix ];
-                };
-              }
-            ];
+            imports = darwinImports;
           };
           "m2" = self.nixos-flake.lib.mkMacosSystem {
             nixpkgs.hostPlatform = "aarch64-darwin";
-            imports = [
-              ./config.nix
-              self.darwinModules.home-manager
-              {
-                home-manager.users.kevin = {
-                  imports = [ ./home.nix ];
-                };
-              }
-            ];
+            imports = darwinImports;
           };
         };
       };

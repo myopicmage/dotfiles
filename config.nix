@@ -28,10 +28,6 @@
       name = "kevin";
       home = "/Users/kevin";
     };
-    "kevinbernfeld" = {
-      name = "kevinbernfeld";
-      home = "/Users/kevinbernfeld";
-    };
   };
 
   home-manager = {
@@ -57,4 +53,17 @@
   imports = [
     # ./services/postgres.nix
   ];
+
+  system = {
+    keyboard = {
+      enableKeyMapping = true;
+      remapCapsLockToControl = true;
+    };
+  };
+
+  security = {
+    pam = {
+      enableSudoTouchIdAuth = true;
+    };
+  };
 }
