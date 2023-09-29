@@ -13,12 +13,6 @@
   # release notes.
   home.stateVersion = "23.05"; # Please read the comment before changing.
 
-  # explicitly allow these unfree packages
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "ngrok"
-    "slack"
-  ];
-
   home.packages = with pkgs; [
     bash
     doctl
