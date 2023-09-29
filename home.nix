@@ -81,6 +81,9 @@
       core = {
         excludesfile = "${config.xdg.configHome}/git/config/ignore";
       };
+      credential = {
+        helper = "osxkeychain";
+      };
       init = {
         defaultbranch = "main";
       };
