@@ -44,6 +44,7 @@
     onActivation.autoUpdate = true;
     casks = [
       "podman-desktop"
+      "whatsapp"
     ];
   };
 
