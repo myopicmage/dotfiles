@@ -3,7 +3,9 @@
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages = [ ];
+  environment.systemPackages = [
+    pkgs.iterm2
+  ];
 
   # Use a custom configuration.nix location.
   # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix
@@ -30,11 +32,6 @@
     };
   };
 
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-  };
-
   services = {
     # Auto upgrade nix package and the daemon service.
     nix-daemon = {
@@ -50,14 +47,25 @@
     ];
   };
 
-  imports = [
-    # ./services/postgres.nix
-  ];
-
   system = {
+    defaults = {
+      CustomUserPreferences = {
+        "com.googlecode.iterm2" = {
+          PrefsCustomFolder = "~/dotfiles/packages/iterm";
+          LoadPrefsFromCustomFolder = true;
+        };
+      };
+    };
+
     keyboard = {
       enableKeyMapping = true;
       remapCapsLockToControl = true;
+    };
+
+    activationScripts = {
+      postUserActivation.text = ''
+        /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+      '';
     };
   };
 

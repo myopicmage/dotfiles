@@ -18,14 +18,14 @@
   outputs = inputs @ { self, ... }:
     let
       darwinImports = [
-              ./config.nix
-              self.darwinModules.home-manager
-              {
-                home-manager.users.kevin = {
-                  imports = [ ./home.nix ];
-                };
-              }
-            ];
+        ./config.nix
+        self.darwinModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.kevin = import ./home.nix;
+        }
+      ];
     in
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [
