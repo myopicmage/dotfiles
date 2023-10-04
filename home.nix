@@ -15,17 +15,13 @@
   home.stateVersion = "23.05"; # Please read the comment before changing.
 
   home.packages = with pkgs; [
-    bash
     doctl
     eza
-    flyctl
     git
     gnupg
-    heroku
     nerdfonts
     ngrok
     nixpkgs-fmt
-    nodejs_18
     rustup
     rnix-lsp
     slack

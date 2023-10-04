@@ -4,6 +4,8 @@
     userName = "Kevin Bernfeld";
     userEmail = "kcbernfeld@gmail.com";
     ignores = [
+      "flake.nix"
+      "flake.lock"
       "shell.nix"
       ".direnv/"
       ".envrc"
