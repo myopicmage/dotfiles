@@ -47,6 +47,9 @@
   homebrew = {
     enable = true;
     onActivation.autoUpdate = true;
+    brews = [
+      "vapor"
+    ];
     casks = [
       "podman-desktop"
       "whatsapp"
