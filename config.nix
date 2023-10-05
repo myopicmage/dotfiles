@@ -85,6 +85,7 @@
         };
       };
       finder = {
+        FXPreferredViewStyle = "clmv"; # default to column view
         ShowPathbar = true;
       };
       menuExtraClock = {
