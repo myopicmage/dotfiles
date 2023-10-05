@@ -1,7 +1,6 @@
 { pkgs, config, lib, ... }:
 {
   imports = [
-    # ./modules
     ./packages
   ];
 
@@ -23,7 +22,6 @@
     nixpkgs-fmt
     rustup
     rnix-lsp
-    slack
     thefuck
   ];
 

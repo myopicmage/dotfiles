@@ -3,9 +3,19 @@
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages = [
-    pkgs.gnupg
-    pkgs.iterm2
+  environment.systemPackages = with pkgs; [
+    gnupg
+    iterm2
+    slack
+    ((vscode.override { isInsiders = true; }).overrideAttrs
+      (oldAttrs: rec {
+        src = (builtins.fetchTarball {
+          url = "https://code.visualstudio.com/sha/download?build=insider&os=darwin-universal";
+          sha256 = "1kghyg9hx2nzn8la67052l17xh1rxh6y7k3pw7id53i4s988l6dy";
+        });
+        version = "latest";
+        buildInputs = oldAttrs.buildInputs ++ [ krb5 ];
+      }))
   ];
 
   # Use a custom configuration.nix location.
@@ -25,6 +35,7 @@
 
   # explicitly allow these unfree packages
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "discord"
     "ngrok"
     "slack"
     "vscode-insiders"
@@ -51,6 +62,9 @@
       "vapor"
     ];
     casks = [
+      "authy"
+      "docker"
+      "dropbox"
       "podman-desktop"
       "whatsapp"
     ];
