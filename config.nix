@@ -41,6 +41,12 @@
     "vscode-insiders"
   ];
 
+  nix = {
+    gc = {
+      automatic = true;
+    };
+  };
+
   users.users = {
     "kevin" = {
       name = "kevin";
@@ -77,6 +83,9 @@
           PrefsCustomFolder = "~/dotfiles/packages/iterm";
           LoadPrefsFromCustomFolder = true;
         };
+      };
+      finder = {
+        ShowPathbar = true;
       };
       menuExtraClock = {
         Show24Hour = true;
