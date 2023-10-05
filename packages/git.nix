@@ -12,7 +12,7 @@
       ".DS_Store"
     ];
     signing = {
-      key = "CB1A14912E30CC44";
+      key = "948C11FA0881F823";
       signByDefault = true;
     };
     extraConfig = {

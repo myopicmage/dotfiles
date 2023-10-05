@@ -18,7 +18,6 @@
     doctl
     eza
     git
-    gnupg
     nerdfonts
     ngrok
     nixpkgs-fmt
