@@ -78,6 +78,11 @@
           LoadPrefsFromCustomFolder = true;
         };
       };
+      menuExtraClock = {
+        Show24Hour = true;
+        ShowDayOfMonth = true;
+        ShowDayOfWeek = true;
+      };
     };
 
     keyboard = {
