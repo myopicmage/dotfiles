@@ -15,11 +15,11 @@
     };
   };
 
-  outputs = inputs @ { self, ... }:
+  outputs = inputs @ { self, home-manager, ... }:
     let
       darwinImports = [
         ./config.nix
-        self.darwinModules.home-manager
+        home-manager.darwinModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
