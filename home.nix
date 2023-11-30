@@ -57,6 +57,10 @@
     nix-direnv.enable = true;
   };
 
+  programs.gh.enable = true;
+
+  programs.ripgrep.enable = true;
+
   programs.zsh = {
     enable = true;
     enableAutosuggestions = true;
@@ -65,7 +69,6 @@
 
       export PATH="/Users/kevin/.local/bin:$PATH"
       export PATH="/usr/local/opt/tcl-tk/bin:$PATH"
-      export SLACK_DEVELOPER_MENU=true
     '';
     oh-my-zsh = {
       enable = true;
@@ -76,6 +79,7 @@
       '';
     };
     shellAliases = {
+      grep = "rg";
       ls = "eza";
     };
   };
