@@ -59,7 +59,12 @@
 
   programs.gh.enable = true;
 
-  programs.ripgrep.enable = true;
+  programs.ripgrep = {
+    enable = true;
+    arguments = [
+      "-C2"
+    ];
+  };
 
   programs.zsh = {
     enable = true;
@@ -79,6 +84,7 @@
       '';
     };
     shellAliases = {
+      code = "code-insiders";
       grep = "rg";
       ls = "eza";
     };
