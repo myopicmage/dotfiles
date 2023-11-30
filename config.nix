@@ -6,7 +6,6 @@
   environment.systemPackages = with pkgs; [
     gnupg
     iterm2
-    slack
   ];
 
   # Use a custom configuration.nix location.
@@ -27,8 +26,6 @@
   # explicitly allow these unfree packages
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
     "ngrok"
-    "slack"
-    "vscode-insiders"
   ];
 
   nix = {
