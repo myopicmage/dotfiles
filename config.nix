@@ -35,9 +35,9 @@
   };
 
   users.users = {
-    "kevin" = {
-      name = "kevin";
-      home = "/Users/kevin";
+    "kevinbernfeld" = {
+      name = "kevinbernfeld";
+      home = "/Users/kevinbernfeld";
     };
   };
 
@@ -53,13 +53,10 @@
     onActivation.autoUpdate = true;
     brews = [
       "flyctl"
-      "swiftlint"
-      "vapor"
     ];
     casks = [
       "authy"
       "discord"
-      "docker"
       "dropbox"
       "podman-desktop"
       "whatsapp"

@@ -23,7 +23,7 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.kevin = import ./home.nix;
+          home-manager.users.kevinbernfeld = import ./home.nix;
         }
       ];
     in
@@ -37,16 +37,8 @@
 
       flake = {
         darwinConfigurations = {
-          "ki9" = self.nixos-flake.lib.mkMacosSystem {
-            nixpkgs.hostPlatform = "x86_64-darwin";
-            imports = darwinImports;
-          };
           "uplift-macbook-pro" = self.nixos-flake.lib.mkMacosSystem {
             nixpkgs.hostPlatform = "x86_64-darwin";
-            imports = darwinImports;
-          };
-          "m2" = self.nixos-flake.lib.mkMacosSystem {
-            nixpkgs.hostPlatform = "aarch64-darwin";
             imports = darwinImports;
           };
         };
