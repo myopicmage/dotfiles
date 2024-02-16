@@ -17,13 +17,16 @@
     };
     extraConfig = {
       core = {
-        excludesFile = "${config.xdg.configHome}/git/config/ignore";
+        excludesFile = "${config.xdg.configHome}/git/ignore";
       };
       credential = {
         helper = "osxkeychain";
       };
       init = {
         defaultbranch = "main";
+      };
+      merge = {
+        conflictStyle = "zdiff3";
       };
       pull = {
         rebase = false;

@@ -17,7 +17,17 @@
 
   outputs = inputs @ { self, home-manager, ... }:
     let
-      darwinImports = [
+      homeImports = [
+        ./config.nix
+        home-manager.darwinModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.kevin = import ./home.nix;
+        }
+      ];
+
+      workImports = [
         ./config.nix
         home-manager.darwinModules.home-manager
         {
@@ -28,18 +38,26 @@
       ];
     in
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [ inputs.nixos-flake.flakeModule ];
+
       systems = [
         "x86_64-darwin"
         "aarch64-darwin"
       ];
 
-      imports = [ inputs.nixos-flake.flakeModule ];
-
       flake = {
         darwinConfigurations = {
           "uplift-macbook-pro" = self.nixos-flake.lib.mkMacosSystem {
             nixpkgs.hostPlatform = "x86_64-darwin";
-            imports = darwinImports;
+            imports = workImports;
+          };
+          "ki9" = self.nixos-flake.lib.mkMacosSystem {
+            nixpkgs.hostPlatform = "x86_64-darwin";
+            imports = homeImports;
+          };
+          "m2" = self.nixos-flake.lib.mkMacosSystem {
+            nixpkgs.hostPlatform = "aarch64-darwin";
+            imports = homeImports;
           };
         };
       };
