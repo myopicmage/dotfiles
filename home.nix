@@ -77,6 +77,7 @@
     '';
     oh-my-zsh = {
       enable = true;
+      custom = "${config.xdg.configHome}/zsh";
       plugins = [ "git" "poetry" "vi-mode" ];
       theme = "ys";
       extraConfig = ''
