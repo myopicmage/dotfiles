@@ -14,6 +14,7 @@
   home.stateVersion = "23.05"; # Please read the comment before changing.
 
   home.packages = with pkgs; [
+    act
     doctl
     eza
     git
@@ -38,6 +39,7 @@
     #   org.gradle.console=verbose
     #   org.gradle.daemon.idletimeout=3600000
     # '';
+    ".config/zsh/backend.zsh".source = ./misc/backend.zsh;
   };
 
   home.sessionVariables = {
