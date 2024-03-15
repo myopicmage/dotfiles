@@ -59,6 +59,7 @@
       "flyctl"
     ];
     casks = [
+      "1password-cli"
       "authy"
       "discord"
       "dropbox"

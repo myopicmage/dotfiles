@@ -40,6 +40,7 @@
     #   org.gradle.daemon.idletimeout=3600000
     # '';
     ".config/zsh/backend.zsh".source = ./misc/backend.zsh;
+    ".config/zsh/dotfiles.zsh".source = ./misc/dotfiles.zsh;
   };
 
   home.sessionVariables = {
