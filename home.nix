@@ -18,12 +18,12 @@
     doctl
     eza
     git
-    nerdfonts
+    nerd-fonts.fira-code
     ngrok
     nixpkgs-fmt
     rustup
-    rnix-lsp
-    thefuck
+    nil
+    pay-respects
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -71,7 +71,7 @@
 
   programs.zsh = {
     enable = true;
-    enableAutosuggestions = true;
+    autosuggestion.enable = true;
     initExtra = ''
       bindkey -v
 

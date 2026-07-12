@@ -1,8 +1,6 @@
 { config, ... }: {
   programs.git = {
     enable = true;
-    userName = "Kevin Bernfeld";
-    userEmail = "kcbernfeld@gmail.com";
     ignores = [
       "flake.nix"
       "flake.lock"
@@ -15,7 +13,11 @@
       key = "948C11FA0881F823";
       signByDefault = true;
     };
-    extraConfig = {
+    settings = {
+      user = {
+        name = "Kevin Bernfeld";
+        email = "kcbernfeld@gmail.com";
+      };
       core = {
         excludesFile = "${config.xdg.configHome}/git/ignore";
       };

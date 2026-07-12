@@ -7,9 +7,7 @@
     defaultEditor = true;
     withPython3 = true;
     extraPackages = with pkgs; [
-      (python3.withPackages (ps: with ps; [
-        ruff-lsp
-      ]))
+      ruff
     ];
     plugins = with pkgs.vimPlugins; [
       {
@@ -42,6 +40,6 @@
       luasnip
     ];
     extraConfig = builtins.readFile ./init.vim;
-    extraLuaConfig = builtins.readFile ./init.lua;
+    initLua = builtins.readFile ./init.lua;
   };
 }

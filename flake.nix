@@ -3,7 +3,7 @@
 
   inputs = {
     flake-parts.url = "github:hercules-ci/flake-parts";
-    nixos-flake.url = "github:srid/nixos-flake";
+    nixos-unified.url = "github:srid/nixos-unified";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nix-darwin = {
       url = "github:lnl7/nix-darwin/master";
@@ -15,62 +15,36 @@
     };
   };
 
-  outputs = inputs @ { self, home-manager, ... }:
+  outputs = inputs @ { self, ... }:
     let
-      homeImports = [
-        ./config.nix
-        home-manager.darwinModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.kevin = import ./home.nix;
-        }
-      ];
-
-      workImports = [
-        ./config.nix
-        home-manager.darwinModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.kevinbernfeld = import ./home.nix;
-        }
-      ];
+      # A macOS host running as user `kevin`.
+      mkHome = username: platform:
+        self.nixos-unified.lib.mkMacosSystem
+          { home-manager = true; }
+          {
+            nixpkgs.hostPlatform = platform;
+            system.primaryUser = username;
+            imports = [
+              ./config.nix
+              {
+                home-manager.users.${username} = {
+                  imports = [ ./home.nix ];
+                };
+              }
+            ];
+          };
     in
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      imports = [ inputs.nixos-flake.flakeModule ];
+      imports = [ inputs.nixos-unified.flakeModules.default ];
 
       systems = [
-        "x86_64-darwin"
         "aarch64-darwin"
       ];
 
       flake = {
         darwinConfigurations = {
-          "uplift-macbook-pro" = self.nixos-flake.lib.mkMacosSystem {
-            nixpkgs.hostPlatform = "x86_64-darwin";
-            imports = workImports;
-          };
-          "ki9" = self.nixos-flake.lib.mkMacosSystem {
-            nixpkgs.hostPlatform = "x86_64-darwin";
-            imports = homeImports;
-          };
-          "m2" = self.nixos-flake.lib.mkMacosSystem {
-            nixpkgs.hostPlatform = "aarch64-darwin";
-            imports = homeImports;
-          };
+          "m2" = mkHome "kevin" "aarch64-darwin";
         };
-      };
-
-      perSystem = { self', ... }: {
-        nixos-flake.primary-inputs = [
-          "nixpkgs"
-          "home-manager"
-          "nix-darwin"
-          "nixos-flake"
-        ];
-
-        packages.default = self'.packages.activate;
       };
     };
 }

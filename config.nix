@@ -26,6 +26,7 @@
   # explicitly allow these unfree packages
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
     "ngrok"
+    "vim-polyglot"
   ];
 
   nix = {
@@ -38,17 +39,6 @@
     "kevin" = {
       name = "kevin";
       home = "/Users/kevin";
-    };
-    "kevinbernfeld" = {
-      name = "kevinbernfeld";
-      home = "/Users/kevinbernfeld";
-    };
-  };
-
-  services = {
-    # Auto upgrade nix package and the daemon service.
-    nix-daemon = {
-      enable = true;
     };
   };
 
@@ -91,17 +81,11 @@
       enableKeyMapping = true;
       remapCapsLockToControl = true;
     };
-
-    activationScripts = {
-      postUserActivation.text = ''
-        /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
-      '';
-    };
   };
 
   security = {
     pam = {
-      enableSudoTouchIdAuth = true;
+      services.sudo_local.touchIdAuth = true;
     };
   };
 }
