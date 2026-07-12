@@ -12,6 +12,10 @@
   # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix
   environment.darwinConfig = "$HOME/dotfiles/config.nix";
 
+  # Back up pre-existing dotfiles that home-manager would otherwise clobber,
+  # renaming them with a `.backup` suffix instead of aborting activation.
+  home-manager.backupFileExtension = "backup";
+
   # Create /etc/zshrc that loads the nix-darwin environment.
   programs = {
     bash.enable = true;
