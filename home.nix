@@ -77,6 +77,10 @@
 
       export PATH="/Users/kevin/.local/bin:$PATH"
       export PATH="/usr/local/opt/tcl-tk/bin:$PATH"
+
+      # The Google Cloud SDK.
+      if [ -f '/Users/kevin/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/kevin/google-cloud-sdk/path.zsh.inc'; fi
+      if [ -f '/Users/kevin/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/kevin/google-cloud-sdk/completion.zsh.inc'; fi
     '';
     oh-my-zsh = {
       enable = true;
