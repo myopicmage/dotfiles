@@ -2,11 +2,7 @@
   programs.git = {
     enable = true;
     ignores = [
-      "flake.nix"
-      "flake.lock"
-      "shell.nix"
       ".direnv/"
-      ".envrc"
       ".DS_Store"
     ];
     signing = {
