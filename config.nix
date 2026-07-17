@@ -1,6 +1,10 @@
 { config, pkgs, lib, ... }:
 
 {
+  imports = [
+    ./services/postgres.nix
+  ];
+
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
@@ -62,16 +66,47 @@
 
   homebrew = {
     enable = true;
-    onActivation.autoUpdate = true;
-    brews = [
-      "flyctl"
+    onActivation = {
+      autoUpdate = true;
+      # `brew bundle` runs under sudo during activation, so it does NOT inherit
+      # the user's `brew trust` state — Homebrew then refuses to load casks from
+      # third-party taps (e.g. sikarugir-app/sikarugir). Waive that trust check
+      # for the activation run; the taps are explicitly declared just below.
+      extraEnv.HOMEBREW_NO_REQUIRE_TAP_TRUST = "1";
+    };
+    taps = [
+      "heroku/brew"
+      "sikarugir-app/sikarugir"
     ];
+    brews = [
+      "bash"
+      "elixir"
+      "flyctl"
+      "gnucobol"
+      "heroku/brew/heroku"
+      "heroku/brew/heroku-node"
+      "node@18"
+      "podman"
+      "qemu"
+      "swiftlint"
+      "vapor"
+      "wget"
+      "yt-dlp"
+    ];
+    # gh and the fira-code font are intentionally NOT here — nix already provides
+    # them (programs.gh.enable + nerd-fonts.fira-code), so brew would duplicate.
     casks = [
       "1password-cli"
       "authy"
+      "claude-code"
       "discord"
+      "docker"
+      "docker-desktop"
       "dropbox"
+      "firefox"
+      "mitmproxy"
       "podman-desktop"
+      "sikarugir"
       "whatsapp"
     ];
   };
