@@ -34,8 +34,22 @@
   ];
 
   nix = {
+    # Weekly garbage collection. Crucially, WITHOUT `options` the automatic GC
+    # only drops unreferenced paths and never deletes old profile generations —
+    # which is how ~3 years of generations piled up despite automatic = true.
+    # `--delete-older-than 30d` reclaims the long tail while keeping a 30-day
+    # rollback window.
     gc = {
       automatic = true;
+      interval = { Weekday = 0; Hour = 3; Minute = 0; }; # Sundays 03:00
+      options = "--delete-older-than 30d";
+    };
+
+    # Hard-link identical files in the store to dedupe it, weekly (an hour after
+    # GC, so it optimises what's left rather than paths about to be collected).
+    optimise = {
+      automatic = true;
+      interval = { Weekday = 0; Hour = 4; Minute = 0; }; # Sundays 04:00
     };
   };
 
