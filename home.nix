@@ -2,6 +2,7 @@
 {
   imports = [
     ./packages
+    ./modules/claude.nix
   ];
 
   # This value determines the Home Manager release that your configuration is
