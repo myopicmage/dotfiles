@@ -6,7 +6,7 @@
 # cache/, history, telemetry, …) is machine-local.
 { config, ... }:
 let
-  claude = "${config.home.homeDirectory}/code/dotfiles/claude";
+  claude = "${config.home.homeDirectory}/code/dotfiles/modules/claude";
 in
 {
   home.file.".claude/CLAUDE.md".source =

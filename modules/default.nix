@@ -1,5 +1,5 @@
 { ... }: {
   imports = [
-    ./iterm2.nix
+    ./iterm2
   ];
 }

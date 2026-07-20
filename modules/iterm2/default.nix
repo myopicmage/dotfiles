@@ -17,7 +17,7 @@ in
 
     # Load iTerm2's preferences from the version-controlled folder in this repo.
     system.defaults.CustomUserPreferences."com.googlecode.iterm2" = {
-      PrefsCustomFolder = "~/code/dotfiles/packages/iterm";
+      PrefsCustomFolder = "~/code/dotfiles/modules/iterm2";
       LoadPrefsFromCustomFolder = true;
     };
   };

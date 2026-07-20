@@ -1,4 +1,4 @@
-> **Synced via my dotfiles.** This file is `~/code/dotfiles/claude/CLAUDE.md`, symlinked to `~/.claude/CLAUDE.md` by home-manager. After changing it — or anything under `~/.claude/skills/` — commit `~/code/dotfiles` and (ask me first, per Version control) push it, so my other machines pick the change up.
+> **Synced via my dotfiles.** This file is `~/code/dotfiles/modules/claude/CLAUDE.md`, symlinked to `~/.claude/CLAUDE.md` by home-manager. After changing it — or anything under `~/.claude/skills/` — commit `~/code/dotfiles` and (ask me first, per Version control) push it, so my other machines pick the change up.
 
 # Global code rules
 
