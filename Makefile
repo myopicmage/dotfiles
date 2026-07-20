@@ -1,4 +1,4 @@
 build:
-	nix run . -- build --flake .
+	darwin-rebuild build --flake .#m2
 switch:
-	nix run . -- switch --flake .
+	sudo darwin-rebuild switch --flake .#m2

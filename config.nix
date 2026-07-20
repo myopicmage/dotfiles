@@ -3,13 +3,15 @@
 {
   imports = [
     ./services/postgres.nix
+    ./modules
   ];
+
+  programs.iterm2.enable = true;
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
     gnupg
-    iterm2
   ];
 
   # Use a custom configuration.nix location.
@@ -113,12 +115,6 @@
 
   system = {
     defaults = {
-      CustomUserPreferences = {
-        "com.googlecode.iterm2" = {
-          PrefsCustomFolder = "~/dotfiles/packages/iterm";
-          LoadPrefsFromCustomFolder = true;
-        };
-      };
       finder = {
         FXPreferredViewStyle = "clmv"; # default to column view
         ShowPathbar = true;
