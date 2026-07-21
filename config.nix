@@ -100,7 +100,6 @@
     casks = [
       "1password-cli"
       "authy"
-      "claude-code"
       "discord"
       "docker"
       "docker-desktop"

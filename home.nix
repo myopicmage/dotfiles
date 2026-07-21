@@ -24,7 +24,7 @@
     nixpkgs-fmt
     rustup
     nil
-    pay-respects
+    tmux
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
