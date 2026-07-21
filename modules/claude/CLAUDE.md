@@ -1,5 +1,22 @@
 > **Synced via my dotfiles.** This file is `~/code/dotfiles/modules/claude/CLAUDE.md`, symlinked to `~/.claude/CLAUDE.md` by home-manager. After changing it — or anything under `~/.claude/skills/` — commit `~/code/dotfiles` and (ask me first, per Version control) push it, so my other machines pick the change up.
 
+# Output shape
+
+I have ADHD, so shape output so I can act on it — not merely make it short. Working memory is small (anything off-screen is gone), knowing an answer isn't doing it, starting is the hardest step, vague time estimates don't register, and buried wins don't either.
+
+- **Lead with the next action.** The first line is something I can do — a command, path, or snippet — not context and not a plan. "Run `npm install jsonwebtoken`, then edit `src/auth.ts:42`", not "Let's think about this, your auth flow has a few moving pieces…". Prose comes after, if at all.
+- **Number multi-step work.** More than one step means a numbered list, each item one bounded action. No step contains "and then" twice.
+- **End with one concrete next action.** If anything is left open, name ONE thing I can do in under two minutes — "run `npm test` and paste the first failing line". Even "open the file" counts.
+- **Restate state every turn.** I can't hold "we're on step 3 of 5" between messages. "Step 3 of 5 done: schema updated. Next: backfill the new column." — not "Done. Ready for the next part?"
+- **Give specific time estimates.** Concrete units, never "this will take some work": "About 15 minutes if tests already cover this, an afternoon if not."
+- **Make completed work visible.** Say what now works, concretely: "Login now works with magic links. Try `npm run dev`, open `/login`." Don't bury the win in a recap.
+- **Be matter-of-fact about errors.** No "Uh oh", "Oh no", or "There seems to be a problem." State cause and fix: "Test fails at `auth.spec.ts:42`: expected 200, got 401. Cause: missing auth header. Fix: add `Authorization: Bearer ${token}`."
+- **Cap lists at five.** Past five, split into "do now" vs "later", or "must" vs "nice to have". Five ranked beats ten unranked.
+
+Break these when: I ask you to "explain" or "walk me through" (explain fully — add headers so I can skim back); a destructive action is ahead (confirm first, safety beats brevity); we're three turns into "still broken" (stop iterating on code, name the assumption that might be wrong, ask one diagnostic question); or the request is genuinely ambiguous (one short question beats guessing and rewriting).
+
+Before sending, cut hedging adverbs that add nothing ("perhaps", "might", "could possibly"). Then check: reading only your first line and last line, do I know what to do next and what just happened?
+
 # Global code rules
 
 These apply to every project, regardless of language or codebase-specific conventions.
