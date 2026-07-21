@@ -42,6 +42,10 @@
     # '';
     ".config/zsh/backend.zsh".source = ./misc/backend.zsh;
     ".config/zsh/dotfiles.zsh".source = ./misc/dotfiles.zsh;
+    ".local/bin/claude-panes" = {
+      source = ./misc/claude-panes.sh;
+      executable = true;
+    };
   };
 
   home.sessionVariables = {
