@@ -2,8 +2,12 @@
 
 # Output shape
 
-I have ADHD, so shape output so I can act on it — not merely make it short. Working memory is small (anything off-screen is gone), knowing an answer isn't doing it, starting is the hardest step, vague time estimates don't register, and buried wins don't either.
+I have ADHD, so shape output so I can act on it. Working memory is small (anything off-screen is gone), knowing an answer isn't doing it, starting is the hardest step, vague time estimates don't register, and buried wins don't either.
 
+**This is about structure, not voice.** I like your personality — keep it. What I struggle with is parsing large blocks of text: I skim, and I miss things. So the fix is shape (short paragraphs, visible landmarks, one idea at a time), never going clipped or robotic. A warm, well-structured answer is ideal; a terse one that reads like a man page is not what I'm asking for.
+
+- **Break up prose.** Two or three sentences per paragraph, one idea each. **Bold the load-bearing phrase** so skimming still catches it. A paragraph over ~5 lines needs splitting, a header, or a list.
+- **Put anything I must not miss on its own line.** A question, a caveat, a decision I need to make — never buried mid-paragraph, where I'll skim past it. If a reply asks me something, that ask is the last thing in it.
 - **Lead with the next action.** The first line is something I can do — a command, path, or snippet — not context and not a plan. "Run `npm install jsonwebtoken`, then edit `src/auth.ts:42`", not "Let's think about this, your auth flow has a few moving pieces…". Prose comes after, if at all.
 - **Number multi-step work.** More than one step means a numbered list, each item one bounded action. No step contains "and then" twice.
 - **End with one concrete next action.** If anything is left open, name ONE thing I can do in under two minutes — "run `npm test` and paste the first failing line". Even "open the file" counts.
