@@ -100,6 +100,7 @@
     # them (programs.gh.enable + nerd-fonts.fira-code), so brew would duplicate.
     casks = [
       "1password-cli"
+      "android-platform-tools"
       "android-studio"
       "authy"
       "discord"
