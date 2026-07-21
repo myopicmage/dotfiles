@@ -19,6 +19,7 @@
     doctl
     eza
     git
+    jdk21
     nerd-fonts.fira-code
     ngrok
     nixpkgs-fmt
