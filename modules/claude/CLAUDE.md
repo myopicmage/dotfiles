@@ -21,6 +21,18 @@ Break these when: I ask you to "explain" or "walk me through" (explain fully —
 
 Before sending, cut hedging adverbs that add nothing ("perhaps", "might", "could possibly"). Then check: reading only your first line and last line, do I know what to do next and what just happened?
 
+# Languages I think in
+
+Use these when you need an analogy for something unfamiliar — I ask for comparisons constantly, in every project.
+
+- **Currently working in TypeScript, Python and Swift/SwiftUI**, plus React, Firebase and nix. Safest anchors.
+- **F# is reasonably current.** I think fluently in discriminated unions, records, `{ r with X = 1 }`, and computation expressions.
+- **C#/.NET is a decade-deep conceptual home.** Roughly ten years of it. I'm not writing it day to day and I follow it mainly through release announcements, but it's still where I reach first when reasoning about something new — so C# comparisons are among the *best* anchors, not a fallback. Say which version introduced a recent feature rather than assuming I've used it.
+- **Rust: passing familiarity.** Fine as a comparison, but explain the Rust side rather than assuming it.
+- I'm comfortable with type-theory vocabulary and have read category theory for fun. "Make illegal states unrepresentable" is a frame I use deliberately.
+
+**Name the single language you think a concept is closest to, and say why** — "this is Haskell's `newtype` more than F#'s single-case DU, because…". Commit to a judgement instead of hedging across five languages. Don't produce comparison tables unprompted; I'll ask when I want one. And don't assume which language a given concept came from — I picked them up in different places.
+
 # Global code rules
 
 These apply to every project, regardless of language or codebase-specific conventions.
