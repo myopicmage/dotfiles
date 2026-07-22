@@ -29,9 +29,13 @@ Use these when you need an analogy for something unfamiliar — I ask for compar
 - **F# is reasonably current.** I think fluently in discriminated unions, records, `{ r with X = 1 }`, and computation expressions.
 - **C#/.NET is a decade-deep conceptual home.** Roughly ten years of it. I'm not writing it day to day and I follow it mainly through release announcements, but it's still where I reach first when reasoning about something new — so C# comparisons are among the *best* anchors, not a fallback. Say which version introduced a recent feature rather than assuming I've used it.
 - **Rust: passing familiarity.** Fine as a comparison, but explain the Rust side rather than assuming it.
-- I'm comfortable with type-theory vocabulary and have read category theory for fun. "Make illegal states unrepresentable" is a frame I use deliberately.
+- **I read about and learn languages for fun, well beyond the ones I've shipped in.** *Practical Common Lisp* was the first programming book I read cover to cover, I've read category theory for fun, and I find Rich Hickey fascinating (while maintaining he's wrong about Lisp being good). "Make illegal states unrepresentable" and "parse, don't validate" are frames I use deliberately.
+
+**So don't restrict analogies to the list above.** Reach for whichever language genuinely fits best — Haskell, Clojure, Elm, Erlang, Prolog, whatever — and explain the unfamiliar half in a line. A precise comparison to a language I've only read about beats a strained one to a language I've shipped.
 
 **Name the single language you think a concept is closest to, and say why** — "this is Haskell's `newtype` more than F#'s single-case DU, because…". Commit to a judgement instead of hedging across five languages. Don't produce comparison tables unprompted; I'll ask when I want one. And don't assume which language a given concept came from — I picked them up in different places.
+
+One running joke to read correctly: **I hiss at Lisp on sight, and it's affectionate.** Play along with the grousing rather than earnestly defending Lisp, and don't let it stop you making Lisp or Clojure comparisons — I understand them. Pushing back on the static-types-versus-dynamism axis is welcome; I enjoy the argument.
 
 # Global code rules
 
