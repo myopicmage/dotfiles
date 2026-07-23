@@ -51,6 +51,7 @@
 
   home.sessionVariables = {
     EDITOR = "nvim";
+    LANG = "en_US.UTF-8";
   };
 
   # Let Home Manager install and manage itself.
