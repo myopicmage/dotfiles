@@ -32,6 +32,26 @@ nix develop 'path:..' --command <cmd>          # from a subdirectory, e.g. web/ 
 shell automatically once you `cd` into the repo — no need to invoke `nix
 develop` by hand in an interactive shell.
 
+## Parallel-agent hazard: the `path:` fetch races concurrent worktrees
+
+`nix develop 'path:..'` copies the whole repo tree — including
+`.claude/worktrees/*/node_modules` — into the nix store on every evaluation.
+If another session is mutating a worktree at that moment (npm install, branch
+switch), the copy can hit a file that vanishes mid-copy, and the shell dies
+with `error: path '…/node_modules/….d.ts' does not exist` even though nothing
+is wrong with the flake. Seen for real on 2026-07-23 while a second agent
+worked in `.claude/worktrees/ipad-uitests`.
+
+Workaround (use it whenever other agents are active in the repo): evaluate the
+shell from a minimal flake dir so nothing volatile gets copied — the dev shell
+reads nothing from the repo besides the two flake files, so this is equivalent:
+
+```bash
+mkdir -p "$CLAUDE_JOB_DIR/tmp/flakeshell"
+cp flake.nix flake.lock "$CLAUDE_JOB_DIR/tmp/flakeshell/"
+nix develop "path:$CLAUDE_JOB_DIR/tmp/flakeshell" --command <cmd>
+```
+
 ## Standard commands
 
 Run each from the stated directory:
