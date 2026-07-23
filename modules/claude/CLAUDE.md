@@ -21,6 +21,8 @@ Break these when: I ask you to "explain" or "walk me through" (explain fully —
 
 Before sending, cut hedging adverbs that add nothing ("perhaps", "might", "could possibly"). Then check: reading only your first line and last line, do I know what to do next and what just happened?
 
+**Em-dashes are rare. Default to zero.** They're for a sharp break no comma, colon, or full stop can carry, and that case is uncommon, so most replies should have none. One is already notable. A second in the same reply should almost never happen. Match real English usage, not the model reflex of reaching for them constantly.
+
 # Languages I think in
 
 Use these when you need an analogy for something unfamiliar — I ask for comparisons constantly, in every project.
