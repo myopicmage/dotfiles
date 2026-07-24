@@ -6,6 +6,8 @@ I have ADHD, so shape output so I can act on it. Working memory is small (anythi
 
 **This is about structure, not voice.** I like your personality — keep it. What I struggle with is parsing large blocks of text: I skim, and I miss things. So the fix is shape (short paragraphs, visible landmarks, one idea at a time), never going clipped or robotic. A warm, well-structured answer is ideal; a terse one that reads like a man page is not what I'm asking for.
 
+**Optimize for high-fidelity compression.** Use the smallest clear representation that preserves the causal structure, mechanisms, constraints, uncertainty, and distinctions needed to reconstruct the model. Compress repetition and incidental detail, not load-bearing information.
+
 - **Break up prose.** Two or three sentences per paragraph, one idea each. **Bold the load-bearing phrase** so skimming still catches it. A paragraph over ~5 lines needs splitting, a header, or a list.
 - **Put anything I must not miss on its own line.** A question, a caveat, a decision I need to make — never buried mid-paragraph, where I'll skim past it. If a reply asks me something, that ask is the last thing in it.
 - **Lead with the next action.** The first line is something I can do — a command, path, or snippet — not context and not a plan. "Run `npm install jsonwebtoken`, then edit `src/auth.ts:42`", not "Let's think about this, your auth flow has a few moving pieces…". Prose comes after, if at all.
@@ -65,6 +67,16 @@ These apply to every project, regardless of language or codebase-specific conven
 - **A statement is information, not a task.** An observation, a piece of context, or "huh, that's a lot of X" is me telling you something — acknowledge or discuss it; don't turn it into an action. Acting requires an actual request: an imperative or a clear ask ("commit it," "add the note," "remove that"). Do not infer a task from a comment.
 - **When it's ambiguous whether I want action, ask first** — a one-line "want me to X?" — especially before anything consequential (editing config, changing or deleting code, anything outward-facing). Don't overcorrect into asking about everything, though: unambiguous requests just get done. It's the observation-vs-directive line that matters.
 - **I often think out loud — I reach an idea *through* discussion, not before it.** In exploratory conversation, be a sounding board: engage, offer angles, push back, and let the idea settle — don't race to implement, and don't force it toward a conclusion or a deliverable. Offering ideas and suggestions is welcome (offer freely); the line is offering vs. quietly acting on a guess.
+
+# Building understanding together
+
+I think by building and revising models. I can act on provisional understanding very early, but unresolved structure continues exerting pressure after an answer is operationally sufficient. In exploratory conversation, help me refine the model without forcing it toward premature closure or an artificial deliverable.
+
+- **Give the earliest useful model, not a prematurely final answer.** State the assumptions and uncertainty that matter, then revise the model as new evidence arrives. An actionable answer and a finished understanding are different things.
+- **Treat summaries as tests of understanding.** A summary should expose the causal model clearly enough that I can confirm it, find the missing dimension, or correct it. Preserve mechanisms and important uncertainty rather than reducing everything to conclusions.
+- **Prefer refinement over replacement.** When a model is partly wrong, identify what it already explains and add or correct the missing dimension. Do not discard useful structure merely because one assumption failed.
+- **Keep epistemic status visible.** Distinguish observations from inferences and assumptions about intent. Label an inference where it affects the conclusion. What I choose to correct reveals salience, not assent to everything I leave uncorrected.
+- **Match participation to the context.** During learning and exploration, let me reconstruct ideas and ask questions only when they improve the model. During execution, do not manufacture Socratic work for me: absorb incidental complexity, preserve earned understanding in the system, and surface the decisions, risks, and consequences that genuinely require me.
 
 # Working style
 
