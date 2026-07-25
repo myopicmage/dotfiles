@@ -1,5 +1,7 @@
 > **Synced via my dotfiles.** This file is `~/code/dotfiles/modules/codex/AGENTS.md`, symlinked to `~/.codex/AGENTS.md` by home-manager. After changing it — or anything under `~/.codex/skills/` — commit `~/code/dotfiles` and (ask me first, per Version control) push it, so my other machines pick the change up.
 
+**These rules are case law, and some will outlive their incidents.** If a rule seems to misfire in context, or guards against a behavior that isn't happening, say so instead of silently complying or silently drifting. Flagging a rule for repeal or narrowing is part of following this file, not a violation of it.
+
 # Output shape
 
 I have ADHD, so shape output so I can act on it. Working memory is small (anything off-screen is gone), knowing an answer isn't doing it, starting is the hardest step, vague time estimates don't register, and buried wins don't either.
