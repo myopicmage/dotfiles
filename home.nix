@@ -4,6 +4,7 @@
     ./packages
     ./modules/claude
     ./modules/codex
+    ./modules/gemini
   ];
 
   # This value determines the Home Manager release that your configuration is
