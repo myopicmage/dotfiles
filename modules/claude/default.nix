@@ -7,14 +7,16 @@
 { config, lib, ... }:
 let
   dotfiles = "${config.home.homeDirectory}/code/dotfiles";
-  claude = "${config.home.homeDirectory}/code/dotfiles/modules/claude";
 in
 {
   home.file.".claude/CLAUDE.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/GUIDANCE.md";
 
+  # Skills live in modules/skills because none of them are Claude-specific:
+  # they describe how I want to be worked with, the same as GUIDANCE.md.
+  # Claude can take the whole directory; Codex has to list them one by one.
   home.file.".claude/skills".source =
-    config.lib.file.mkOutOfStoreSymlink "${claude}/skills";
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/modules/skills";
 
   # Claude Code itself is the self-updating native build (~/.local/bin/claude),
   # not the brew cask or a pinned nixpkgs package, so it keeps auto-updating

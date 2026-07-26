@@ -12,8 +12,10 @@ in
   home.file.".codex/AGENTS.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/GUIDANCE.md";
 
-  # No user skills at present. `nix-dev-env` was removed on 2026-07-26: its
-  # general nix content moved into the global GUIDANCE.md and its BRBAviation
-  # content into that repo's own agent instructions, which load automatically.
-  # Add new ones here individually, one home.file per skill.
+  # Skills live in modules/skills, shared with Claude, because none of them are
+  # agent-specific. Listed one by one because ~/.codex/skills also holds
+  # Codex's own built-ins under .system, so the directory cannot be replaced
+  # wholesale the way Claude's can. One line per skill.
+  home.file.".codex/skills/learning-mode".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/modules/skills/learning-mode";
 }
