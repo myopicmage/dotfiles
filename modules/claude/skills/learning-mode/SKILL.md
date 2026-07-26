@@ -37,6 +37,13 @@ then stop and wait for the go-word.
 Do not complete the whole plan and narrate it afterwards. **The explanation arrives with
 the edit, not after all the edits.**
 
+**Make the change with the Edit/Write tools, never a script through Bash.** Only those
+render a diff, so a scripted edit is invisible at the moment it lands and the explanation
+arrives attached to nothing. The pull toward scripting comes from wanting match-count
+assertions across files and from skipping Edit's read-first step; neither is worth the
+lost diff. If a change genuinely must span many files identically, say so first and let
+Kevin decide.
+
 A stop is usually one bounded fix or one file. Batch only where batching genuinely reads
 better, never where each file deserves its own explanation.
 
