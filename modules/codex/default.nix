@@ -11,6 +11,8 @@ in
   home.file.".codex/AGENTS.md".source =
     config.lib.file.mkOutOfStoreSymlink "${codex}/AGENTS.md";
 
-  home.file.".codex/skills/nix-dev-env".source =
-    config.lib.file.mkOutOfStoreSymlink "${codex}/skills/nix-dev-env";
+  # No user skills at present. `nix-dev-env` was removed on 2026-07-26: its
+  # general nix content moved into the global CLAUDE.md and its BRBAviation
+  # content into that repo's own CLAUDE.md, which loads without being invoked.
+  # Add new ones here individually, one home.file per skill.
 }
