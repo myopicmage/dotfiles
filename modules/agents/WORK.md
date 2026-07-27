@@ -58,10 +58,24 @@ explained rather than merely reported.
 
 To contribute:
 
-1. Prepare the Markdown under a temporary name that does not match the
-   discovery pattern.
-2. Run `agents-work publish <case-directory> <draft-path>`.
-3. Update only `work.toml`'s coordination fields, and update them once.
+1. Run `agents-work draft <case-directory> --kind <kind> --author <agent>`. It
+   writes a hidden draft beside the case, with valid front matter already
+   filled in, and prints the path.
+2. Write the body. Leave the generated front matter alone apart from the
+   optional `source_*` and `subject_*` fields.
+3. Run `agents-work publish <case-directory> <draft-path>`.
+4. Update only `work.toml`'s coordination fields, and update them once.
+
+`--responds-to` and `--supersedes` accept either a full artifact filename or a
+bare sequence number. A sequence number that matches more than one artifact is
+an error rather than a guess, because concurrent writers may legally share one.
+
+Hand-writing the front matter still works, under any temporary name that does
+not match the discovery pattern. `draft` exists because the sequence, the
+artifact ID, the timestamp and the exact field set are all constraints stated
+elsewhere in this document, and a generator cannot forget them. It validates
+its own output before writing, so a generated draft fails only on what the
+author adds.
 
 The publishing command verifies the front matter, writes the integrity
 sidecar, and publishes the Markdown last. Publication is no-clobber. It
@@ -177,6 +191,35 @@ one. When the cursor and a decision artifact disagree, the artifact wins.
 
 This is what makes a possibly stale cursor safe. Without the durable artifact,
 a stale cursor silently discards decisions instead of merely lagging them.
+
+## Cross-channel decisions
+
+Kevin speaks to each agent on a separate channel. No agent can see another's, so
+every record of a human decision is evidence from one channel rather than the
+complete picture.
+
+An agent may record what Kevin told it, attributed and dated.
+
+An agent must **not** correct or overwrite another agent's attributed record of
+a human decision on the strength of its own channel alone, **even when it is
+confident its own record is complete**. Ask Kevin to resolve the conflict and
+leave both records standing.
+
+Ask rather than infer whenever uncertain about a human decision, its scope, or
+whether it still stands.
+
+Absence of a decision in this notebook is not evidence that it was not made.
+
+These are three mechanisms, not one, because they fire on different things. The
+rule above is unconditional and does not depend on the acting agent feeling
+uncertain, which is the point: both incidents that produced this section
+involved an agent acting confidently. `Decisions are artifacts` makes a decision
+visible to an agent that was not in the conversation. The uncertainty default
+covers cases where an agent already knows its information is incomplete.
+
+No protocol reliably catches a decision that was never recorded and that the
+current agent has no reason to suspect exists. When a decision matters, the
+mitigation is to tell one agent and let the artifact carry it.
 
 ## Lifecycle
 
