@@ -7,10 +7,13 @@ let
   dotfiles = "${config.home.homeDirectory}/code/dotfiles";
   guidance =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/modules/agents/GUIDANCE.md";
+  sharedWorkProtocol =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/modules/agents/WORK.md";
 in
 {
   home.file.".claude/CLAUDE.md".source = guidance;
   home.file.".codex/AGENTS.md".source = guidance;
+  home.file.".agents/work/README.md".source = sharedWorkProtocol;
 
   # Skills live in modules/skills because none of them are Claude-specific:
   # they describe how I want to be worked with, the same as the guidance.
