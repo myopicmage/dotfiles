@@ -125,6 +125,43 @@ class AgentsWorkTests(unittest.TestCase):
 
         self.assertFalse(agents_work.validate_case(self.case))
 
+    def test_draft_is_publishable_without_editing_front_matter(self) -> None:
+        drafted = agents_work.draft(self.case, kind="review", author="claude")
+        published = agents_work.publish(self.case, drafted)
+
+        self.assertTrue(published.name.startswith("001-test-case-claude-"))
+        self.assertTrue(agents_work.validate_case(self.case))
+
+    def test_draft_sequence_follows_the_existing_inventory(self) -> None:
+        agents_work.publish(self.case, self.prepare())
+
+        drafted = agents_work.draft(self.case, kind="review", author="claude")
+
+        self.assertTrue(drafted.name.startswith(".draft-002-"))
+
+    def test_draft_resolves_a_bare_sequence_reference(self) -> None:
+        published = agents_work.publish(self.case, self.prepare())
+
+        drafted = agents_work.draft(
+            self.case, kind="review", author="claude", responds_to=["1"]
+        )
+
+        metadata = agents_work.parse_front_matter(
+            drafted.read_bytes(), drafted
+        )
+        self.assertEqual([published.name], metadata["responds_to"])
+
+    def test_draft_rejects_a_reference_that_does_not_exist(self) -> None:
+        with self.assertRaises(agents_work.ValidationFailure):
+            agents_work.draft(
+                self.case, kind="review", author="claude", responds_to=["7"]
+            )
+
+    def test_an_unpublished_draft_is_not_discovered(self) -> None:
+        agents_work.draft(self.case, kind="review", author="claude")
+
+        self.assertTrue(agents_work.validate_case(self.case))
+
     def test_ready_for_implementation_is_resting(self) -> None:
         (self.case / "work.toml").write_text(
             manifest_text(
