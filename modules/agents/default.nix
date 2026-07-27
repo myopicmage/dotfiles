@@ -2,15 +2,24 @@
 #
 # Guidance and skills are symlinked out of the nix store so they stay editable
 # in place. Each agent receives the same source under the filename it expects.
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 let
   dotfiles = "${config.home.homeDirectory}/code/dotfiles";
   guidance =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/modules/agents/GUIDANCE.md";
   sharedWorkProtocol =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/modules/agents/WORK.md";
+  agentsWork = pkgs.writeShellApplication {
+    name = "agents-work";
+    runtimeInputs = [ pkgs.python3 ];
+    text = ''
+      exec python3 "${dotfiles}/modules/agents/agents_work.py" "$@"
+    '';
+  };
 in
 {
+  home.packages = [ agentsWork ];
+
   home.file.".claude/CLAUDE.md".source = guidance;
   home.file.".codex/AGENTS.md".source = guidance;
   home.file.".agents/work/README.md".source = sharedWorkProtocol;
