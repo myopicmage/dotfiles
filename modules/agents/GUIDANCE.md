@@ -1,4 +1,4 @@
-> **Synced via my dotfiles.** This file is `~/code/dotfiles/GUIDANCE.md`, exposed under each agent's expected global instruction filename by Home Manager. After changing it (or anything under an agent's tracked skills directory), commit `~/code/dotfiles` and (ask me first, per Version control) push it, so my other machines pick the change up.
+> **Synced via my dotfiles.** This file is `~/code/dotfiles/modules/agents/GUIDANCE.md`, exposed under each agent's expected global instruction filename by Home Manager. After changing it (or anything under an agent's tracked skills directory), commit `~/code/dotfiles` and (ask me first, per Version control) push it, so my other machines pick the change up.
 
 # About these rules
 

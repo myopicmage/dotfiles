@@ -1,22 +1,24 @@
-# Claude Code config, tracked in the dotfiles and shared across machines.
+# Shared agent config, tracked in the dotfiles and shared across machines.
 #
-# CLAUDE.md and skills/ are symlinked OUT of the nix store (mkOutOfStoreSymlink)
-# so they stay editable in place. Edit them directly, no rebuild needed to
-# apply. Only these two are tracked; the rest of ~/.claude (projects/, sessions/,
-# cache/, history, telemetry, …) is machine-local.
+# Guidance and skills are symlinked out of the nix store so they stay editable
+# in place. Each agent receives the same source under the filename it expects.
 { config, lib, ... }:
 let
   dotfiles = "${config.home.homeDirectory}/code/dotfiles";
+  guidance =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/modules/agents/GUIDANCE.md";
 in
 {
-  home.file.".claude/CLAUDE.md".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/GUIDANCE.md";
+  home.file.".claude/CLAUDE.md".source = guidance;
+  home.file.".codex/AGENTS.md".source = guidance;
 
   # Skills live in modules/skills because none of them are Claude-specific:
-  # they describe how I want to be worked with, the same as GUIDANCE.md.
+  # they describe how I want to be worked with, the same as the guidance.
   # Claude can take the whole directory; Codex has to list them one by one.
   home.file.".claude/skills".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/modules/skills";
+  home.file.".codex/skills/learning-mode".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/modules/skills/learning-mode";
 
   # Claude Code itself is the self-updating native build (~/.local/bin/claude),
   # not the brew cask or a pinned nixpkgs package, so it keeps auto-updating

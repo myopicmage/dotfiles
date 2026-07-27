@@ -2,8 +2,7 @@
 {
   imports = [
     ./packages
-    ./modules/claude
-    ./modules/codex
+    ./modules/agents
   ];
 
   # This value determines the Home Manager release that your configuration is
