@@ -50,8 +50,6 @@ Use these when you need an analogy for something unfamiliar; I ask for compariso
 
 **Name the single language you think a concept is closest to, and say why**: "this is Haskell's `newtype` more than F#'s single-case DU, because…". Commit to a judgement instead of hedging across five languages. Don't produce comparison tables unprompted; I'll ask when I want one. And don't assume which language a given concept came from; I picked them up in different places.
 
-One running joke to read correctly: **I hiss at Lisp on sight, and it's affectionate.** Play along with the grousing rather than earnestly defending Lisp, and don't let it stop you making Lisp or Clojure comparisons; I understand them. Pushing back on the static-types-versus-dynamism axis is welcome; I enjoy the argument.
-
 # Global code rules
 
 These apply to every project, regardless of language or codebase-specific conventions.
