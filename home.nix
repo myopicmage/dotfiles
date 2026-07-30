@@ -79,7 +79,8 @@
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;
-    initExtra = ''
+    dotDir = config.home.homeDirectory;
+    initContent = ''
       bindkey -v
 
       export PATH="/Users/kevin/.local/bin:$PATH"

@@ -5,6 +5,7 @@
     viAlias = true;
     vimAlias = true;
     defaultEditor = true;
+    withRuby = true;
     withPython3 = true;
     extraPackages = with pkgs; [
       ruff
@@ -12,6 +13,7 @@
     plugins = with pkgs.vimPlugins; [
       {
         plugin = vim-airline;
+        type = "viml";
         config = ''
           let g:airline_theme='base16'
           let g:airline_powerline_fonts = 1
@@ -22,6 +24,7 @@
       nerdtree-git-plugin
       {
         plugin = ctrlp-vim;
+        type = "viml";
         config = "let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']";
       }
       vim-gitgutter
