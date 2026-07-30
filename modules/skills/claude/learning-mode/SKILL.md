@@ -1,6 +1,6 @@
 ---
 name: learning-mode
-description: Kevin's working loop for implementation work he wants to learn from: plan first, then one stop at a time with the explanation arriving alongside each edit, gated on a rotating go-word. Use when a repo declares itself a learning project, when Kevin asks for learning mode by name, or when he asks to be walked through work rather than handed it.
+description: "Kevin's working loop for implementation work he wants to learn from: plan first, then one stop at a time with the explanation arriving alongside each edit. Use when a repo declares itself a learning project, when Kevin asks for learning mode by name, or when he asks to be walked through work rather than handed it."
 ---
 
 # Learning mode
@@ -32,7 +32,7 @@ stops already covered.
 
 **2. Then work one stop at a time, explaining as you go.** For each stop: make the change
 and explain it in the same message (what changed, why, and any concept it introduces),
-then stop and wait for the go-word.
+then stop and wait for Kevin to continue.
 
 Do not complete the whole plan and narrate it afterwards. **The explanation arrives with
 the edit, not after all the edits.**
@@ -49,13 +49,6 @@ better, never where each file deserves its own explanation.
 
 **3. One commit per stop**, naming the failure mode or concept in the message, so the git
 log replays the curriculum.
-
-## The go-word
-
-At each gate, pick a random human language, translate "go" into it, and name both: "say
-*twende* (Swahili) when ready." Kevin advances by replying with that word.
-
-Vary the languages. Don't repeat one within a session.
 
 ## Restate position every turn
 
