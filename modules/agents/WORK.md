@@ -64,11 +64,17 @@ To contribute:
 2. Write the body. Leave the generated front matter alone apart from the
    optional `source_*` and `subject_*` fields.
 3. Run `agents-work publish <case-directory> <draft-path>`.
-4. Update only `work.toml`'s coordination fields, and update them once.
+4. Run `agents-work cursor <case-directory> --status <status>
+   --next-agent <agent> --action "<request>"`, once. It writes only the
+   coordination fields, stamps `updated_at` itself, and refuses to write a
+   cursor that violates the manifest rules below, so an illegal status or a
+   mismatched status/agent pair cannot reach the file. Moving to a resting
+   status clears `next_agent` unless one is passed explicitly.
 
 `--responds-to` and `--supersedes` accept either a full artifact filename or a
-bare sequence number. A sequence number that matches more than one artifact is
-an error rather than a guess, because concurrent writers may legally share one.
+bare sequence number, and may be repeated or given several values at once. A
+sequence number that matches more than one artifact is an error rather than a
+guess, because concurrent writers may legally share one.
 
 Hand-writing the front matter still works, under any temporary name that does
 not match the discovery pattern. `draft` exists because the sequence, the
@@ -287,6 +293,12 @@ The statuses are:
 
 An active status requires a non-empty `next_agent`. A resting status requires
 `next_agent` to be empty.
+
+`agents-work cursor` enforces all of this before writing, which makes it the
+preferred way to move the cursor: the rules live in the same code that
+validates them, so the command cannot write a manifest that `validate` would
+reject. Hand-editing still works and carries exactly that risk; it has
+produced an out-of-vocabulary status once already.
 
 `ready_for_implementation` does not authorize action. It means planning has
 converged and awaits Kevin's instruction. Artifact presence is never an

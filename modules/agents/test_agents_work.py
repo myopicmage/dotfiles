@@ -173,6 +173,121 @@ class AgentsWorkTests(unittest.TestCase):
 
         self.assertTrue(agents_work.validate_case(self.case))
 
+    def test_repeated_relationship_flags_accumulate(self) -> None:
+        args = agents_work.build_parser().parse_args(
+            [
+                "draft",
+                str(self.case),
+                "--kind",
+                "review",
+                "--author",
+                "claude",
+                "--responds-to",
+                "026",
+                "--responds-to",
+                "027",
+            ]
+        )
+
+        self.assertEqual(["026", "027"], args.responds_to)
+
+    # ------------------------------------------------------------- cursor ---
+
+    def read_manifest(self) -> dict:
+        import tomllib
+
+        return tomllib.loads(
+            (self.case / "work.toml").read_text(encoding="utf-8")
+        )
+
+    def test_cursor_moves_the_coordination_fields(self) -> None:
+        agents_work.cursor(
+            self.case,
+            {
+                "status": "awaiting_review",
+                "next_agent": "codex",
+                "requested_action": "Review plan 030.",
+            },
+        )
+
+        manifest = self.read_manifest()
+        self.assertEqual("awaiting_review", manifest["status"])
+        self.assertEqual("codex", manifest["next_agent"])
+        self.assertEqual("Review plan 030.", manifest["requested_action"])
+        self.assertTrue(agents_work.validate_case(self.case))
+
+    def test_cursor_stamps_updated_at_and_nothing_else(self) -> None:
+        before = self.read_manifest()
+
+        agents_work.cursor(self.case, {"status": "revision_requested"})
+
+        after = self.read_manifest()
+        self.assertNotEqual(before["updated_at"], after["updated_at"])
+        self.assertEqual(before["created_at"], after["created_at"])
+        self.assertEqual(before["id"], after["id"])
+        self.assertEqual(before["title"], after["title"])
+
+    def test_cursor_rejects_an_unknown_status(self) -> None:
+        with self.assertRaises(agents_work.ValidationFailure):
+            agents_work.cursor(self.case, {"status": "in_progress"})
+
+    def test_cursor_rejects_active_status_without_agent(self) -> None:
+        with self.assertRaises(agents_work.ValidationFailure):
+            agents_work.cursor(
+                self.case,
+                {"status": "awaiting_review", "next_agent": ""},
+            )
+
+    def test_cursor_clears_the_agent_for_a_resting_status(self) -> None:
+        agents_work.cursor(self.case, {"status": "deferred"})
+
+        self.assertEqual("", self.read_manifest()["next_agent"])
+        self.assertTrue(agents_work.validate_case(self.case))
+
+    def test_cursor_rejects_a_resting_status_with_an_agent(self) -> None:
+        with self.assertRaises(agents_work.ValidationFailure):
+            agents_work.cursor(
+                self.case,
+                {"status": "deferred", "next_agent": "codex"},
+            )
+
+    def test_cursor_repairs_an_illegal_manifest(self) -> None:
+        # The incident this command exists for: a status outside the
+        # vocabulary, written by hand. The cursor must be able to read past
+        # the illegal value in order to replace it.
+        (self.case / "work.toml").write_text(
+            manifest_text(status="in_progress"), encoding="utf-8"
+        )
+        self.assertFalse(agents_work.validate_case(self.case))
+
+        agents_work.cursor(self.case, {"status": "revision_requested"})
+
+        self.assertTrue(agents_work.validate_case(self.case))
+
+    def test_cursor_preserves_fields_it_does_not_know(self) -> None:
+        with (self.case / "work.toml").open("a", encoding="utf-8") as handle:
+            handle.write('custom_note = "keep me"\n')
+
+        agents_work.cursor(self.case, {"status": "revision_requested"})
+
+        self.assertEqual("keep me", self.read_manifest()["custom_note"])
+
+    def test_cursor_refuses_identity_fields(self) -> None:
+        with self.assertRaises(agents_work.ValidationFailure):
+            agents_work.cursor(self.case, {"id": "other-case"})
+
+    def test_cursor_refuses_a_legacy_manifest(self) -> None:
+        (self.case / "work.toml").write_text(
+            manifest_text(schema_version=1), encoding="utf-8"
+        )
+
+        with self.assertRaises(agents_work.ValidationFailure):
+            agents_work.cursor(self.case, {"status": "drafting"})
+
+    def test_cursor_requires_at_least_one_field(self) -> None:
+        with self.assertRaises(agents_work.ValidationFailure):
+            agents_work.cursor(self.case, {})
+
 
 if __name__ == "__main__":
     unittest.main()

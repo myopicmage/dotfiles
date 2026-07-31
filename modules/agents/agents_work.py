@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import hashlib
+import json
 import os
 from pathlib import Path
 import re
@@ -171,6 +172,42 @@ def discovered_artifacts(case: Path) -> list[Path]:
     )
 
 
+def coordination_errors(manifest: dict[str, Any], label: str) -> list[str]:
+    """The phase, status and next_agent rules, shared by validation and cursor.
+
+    Stated once so the command that writes a cursor and the command that
+    checks one cannot disagree about what a legal cursor is.
+    """
+    errors: list[str] = []
+
+    phase = manifest.get("phase")
+    if phase not in PHASES:
+        errors.append(
+            f"{label}: phase must be one of {', '.join(sorted(PHASES))}"
+        )
+
+    status = manifest.get("status")
+    if status not in STATUSES:
+        errors.append(
+            f"{label}: status must be one of {', '.join(sorted(STATUSES))}"
+        )
+
+    next_agent = manifest.get("next_agent")
+    if not isinstance(next_agent, str):
+        errors.append(f"{label}: next_agent must be a string")
+    elif status in ACTIVE_STATUSES and not next_agent:
+        errors.append(f"{label}: active status requires next_agent")
+    elif status in RESTING_STATUSES and next_agent:
+        errors.append(f"{label}: resting status requires empty next_agent")
+
+    if phase == "complete" and status != "complete":
+        errors.append(f"{label}: complete phase requires complete status")
+    if status == "complete" and phase != "complete":
+        errors.append(f"{label}: complete status requires complete phase")
+
+    return errors
+
+
 def read_manifest(case: Path) -> tuple[dict[str, Any] | None, list[str]]:
     manifest_path = case / "work.toml"
     if not manifest_path.is_file():
@@ -186,30 +223,7 @@ def read_manifest(case: Path) -> tuple[dict[str, Any] | None, list[str]]:
     if schema not in {1, 2}:
         errors.append(f"{manifest_path}: schema_version must be 1 or 2")
 
-    phase = manifest.get("phase")
-    if phase not in PHASES:
-        errors.append(
-            f"{manifest_path}: phase must be one of {', '.join(sorted(PHASES))}"
-        )
-
-    status = manifest.get("status")
-    if status not in STATUSES:
-        errors.append(
-            f"{manifest_path}: status must be one of {', '.join(sorted(STATUSES))}"
-        )
-
-    next_agent = manifest.get("next_agent")
-    if not isinstance(next_agent, str):
-        errors.append(f"{manifest_path}: next_agent must be a string")
-    elif status in ACTIVE_STATUSES and not next_agent:
-        errors.append(f"{manifest_path}: active status requires next_agent")
-    elif status in RESTING_STATUSES and next_agent:
-        errors.append(f"{manifest_path}: resting status requires empty next_agent")
-
-    if phase == "complete" and status != "complete":
-        errors.append(f"{manifest_path}: complete phase requires complete status")
-    if status == "complete" and phase != "complete":
-        errors.append(f"{manifest_path}: complete status requires complete phase")
+    errors.extend(coordination_errors(manifest, str(manifest_path)))
 
     if schema == 2:
         legacy = {"latest_sequence", "latest_artifacts", "artifacts"}
@@ -570,6 +584,178 @@ def publish(case: Path, draft: Path) -> Path:
     return final_path
 
 
+# The manifest is rendered in this order, grouped as the files are grouped in
+# practice: identity, repository, coordination, pointers, timestamps. A blank
+# line separates groups. Ordered for the same reason OPTIONAL_FIELD_ORDER is:
+# a set would emit the fields differently on every run.
+MANIFEST_FIELD_GROUPS: tuple[tuple[str, ...], ...] = (
+    ("schema_version", "id", "title"),
+    ("repository_name", "repository_path"),
+    ("phase", "status", "next_agent", "requested_action"),
+    (
+        "implementation_branch",
+        "pull_request_system",
+        "pull_request_id",
+        "reviewed_commit",
+    ),
+    ("created_at", "updated_at"),
+)
+
+# The fields the cursor command may write. Everything else in the manifest is
+# identity, which the command has no flag for and therefore cannot touch.
+CURSOR_FIELDS = frozenset(
+    {
+        "phase",
+        "status",
+        "next_agent",
+        "requested_action",
+        "implementation_branch",
+        "pull_request_system",
+        "pull_request_id",
+        "reviewed_commit",
+    }
+)
+
+
+def render_toml_value(field: str, value: Any) -> str:
+    # bool first, because bool is a subclass of int and would render as 0/1.
+    if isinstance(value, bool):
+        return "true" if value else "false"
+
+    if isinstance(value, int):
+        return str(value)
+
+    if isinstance(value, str):
+        # JSON string escaping is valid TOML basic-string escaping for
+        # everything json.dumps emits, so the quoting cannot be hand-rolled
+        # wrong.
+        return json.dumps(value)
+
+    raise ValidationFailure(
+        f"cannot render manifest field {field} of type {type(value).__name__}"
+    )
+
+
+def render_manifest(manifest: dict[str, Any]) -> str:
+    known = [field for group in MANIFEST_FIELD_GROUPS for field in group]
+    groups: list[list[str]] = []
+
+    for group in MANIFEST_FIELD_GROUPS:
+        lines = [
+            f"{field} = {render_toml_value(field, manifest[field])}"
+            for field in group
+            if field in manifest
+        ]
+        if lines:
+            groups.append(lines)
+
+    # Fields this tool does not know about are preserved rather than dropped,
+    # so a forward-compatible cursor edit cannot silently discard somebody
+    # else's state.
+    unknown = sorted(manifest.keys() - set(known))
+    if unknown:
+        groups.append(
+            [
+                f"{field} = {render_toml_value(field, manifest[field])}"
+                for field in unknown
+            ]
+        )
+
+    return "\n\n".join("\n".join(group) for group in groups) + "\n"
+
+
+def cursor(case: Path, updates: dict[str, str]) -> Path:
+    """Move the coordination cursor, refusing to write an illegal one.
+
+    Reads the manifest raw rather than through validation, because the one
+    time this command is most needed is when the current cursor is already
+    illegal and hand-editing is the only other way out.
+    """
+    case = case.expanduser().resolve()
+    manifest_path = case / "work.toml"
+
+    if not manifest_path.is_file():
+        raise ValidationFailure(f"{case}: missing work.toml")
+
+    unexpected = sorted(updates.keys() - CURSOR_FIELDS)
+    if unexpected:
+        raise ValidationFailure(
+            f"cursor cannot write: {', '.join(unexpected)}"
+        )
+
+    if not updates:
+        raise ValidationFailure("cursor requires at least one field to set")
+
+    try:
+        manifest = tomllib.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as error:
+        raise ValidationFailure(
+            f"{manifest_path}: invalid work.toml: {error}"
+        ) from error
+
+    if manifest.get("schema_version") != 2:
+        raise ValidationFailure(
+            f"{manifest_path}: cursor requires schema_version 2; "
+            "migrate a legacy manifest by hand first"
+        )
+
+    merged = dict(manifest)
+    merged.update(updates)
+
+    # A resting status requires an empty next_agent, so moving to one without
+    # naming an agent clears the field rather than failing on a value the
+    # caller never chose. An agent named explicitly still fails below, because
+    # that combination is a contradiction rather than an omission.
+    status = merged.get("status")
+    if status in RESTING_STATUSES and "next_agent" not in updates:
+        merged["next_agent"] = ""
+
+    merged["updated_at"] = (
+        dt.datetime.now().astimezone().replace(microsecond=0).isoformat()
+    )
+
+    errors = coordination_errors(merged, str(manifest_path))
+    if errors:
+        raise ValidationFailure("\n".join(errors))
+
+    rendered = render_manifest(merged)
+
+    # Prove the rendering reads back as what was written, the same discipline
+    # `draft` applies to front matter: the tool's own output cannot be the
+    # thing that fails validation later.
+    if tomllib.loads(rendered) != merged:
+        raise ValidationFailure(
+            f"{manifest_path}: rendered manifest does not round-trip"
+        )
+
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=".work-", suffix=".tmp", dir=case
+    )
+    temporary_path = Path(temporary_name)
+
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as temporary:
+            os.fchmod(temporary.fileno(), 0o644)
+            temporary.write(rendered)
+            temporary.flush()
+            os.fsync(temporary.fileno())
+
+        # Replace rather than no-clobber, deliberately: the manifest is the
+        # one mutable file in a case, and atomicity is what protects a
+        # concurrent reader from a half-written cursor.
+        os.replace(temporary_path, manifest_path)
+        fsync_directory(case)
+    finally:
+        temporary_path.unlink(missing_ok=True)
+
+    agent = merged.get("next_agent") or "(none)"
+    print(
+        f"{manifest_path}: phase={merged.get('phase')} "
+        f"status={merged.get('status')} next_agent={agent}"
+    )
+    return manifest_path
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="agents-work",
@@ -590,15 +776,23 @@ def build_parser() -> argparse.ArgumentParser:
     draft_parser.add_argument(
         "--topic", help="defaults to the work.toml id"
     )
+    # `extend`, so a repeated flag accumulates. The default action with
+    # `nargs="*"` silently keeps only the last occurrence, which discards a
+    # relationship the author explicitly named.
     draft_parser.add_argument(
         "--responds-to",
         nargs="*",
+        action="extend",
         default=[],
         metavar="REF",
-        help="artifact filename or bare sequence number",
+        help="artifact filename or bare sequence number; may be repeated",
     )
     draft_parser.add_argument(
-        "--supersedes", nargs="*", default=[], metavar="REF"
+        "--supersedes",
+        nargs="*",
+        action="extend",
+        default=[],
+        metavar="REF",
     )
     draft_parser.add_argument(
         "--output",
@@ -609,6 +803,30 @@ def build_parser() -> argparse.ArgumentParser:
     publish_parser = subparsers.add_parser("publish")
     publish_parser.add_argument("case", type=Path)
     publish_parser.add_argument("draft", type=Path)
+
+    cursor_parser = subparsers.add_parser(
+        "cursor",
+        help="Move work.toml's coordination fields, refusing an illegal cursor",
+    )
+    cursor_parser.add_argument("case", type=Path)
+    cursor_parser.add_argument("--phase", choices=sorted(PHASES))
+    cursor_parser.add_argument("--status", choices=sorted(STATUSES))
+    cursor_parser.add_argument(
+        "--next-agent",
+        dest="next_agent",
+        help='the agent expected to act next; "" to clear',
+    )
+    cursor_parser.add_argument(
+        "--action",
+        dest="requested_action",
+        help="what the next agent is being asked to do",
+    )
+    cursor_parser.add_argument(
+        "--implementation-branch", dest="implementation_branch"
+    )
+    cursor_parser.add_argument("--pr-system", dest="pull_request_system")
+    cursor_parser.add_argument("--pr-id", dest="pull_request_id")
+    cursor_parser.add_argument("--reviewed-commit", dest="reviewed_commit")
 
     return parser
 
@@ -635,6 +853,24 @@ def main(argv: list[str] | None = None) -> int:
 
         if args.command == "publish":
             publish(args.case, args.draft)
+            return 0
+
+        if args.command == "cursor":
+            updates = {
+                field: value
+                for field, value in (
+                    ("phase", args.phase),
+                    ("status", args.status),
+                    ("next_agent", args.next_agent),
+                    ("requested_action", args.requested_action),
+                    ("implementation_branch", args.implementation_branch),
+                    ("pull_request_system", args.pull_request_system),
+                    ("pull_request_id", args.pull_request_id),
+                    ("reviewed_commit", args.reviewed_commit),
+                )
+                if value is not None
+            }
+            cursor(args.case, updates)
             return 0
     except (OSError, ValidationFailure) as error:
         print(f"error: {error}", file=sys.stderr)
