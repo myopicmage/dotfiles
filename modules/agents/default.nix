@@ -16,9 +16,19 @@ let
       exec python3 "${dotfiles}/modules/agents/agents_work.py" "$@"
     '';
   };
+  goWord = pkgs.writeShellApplication {
+    name = "go-word";
+    runtimeInputs = [ pkgs.python3 ];
+    text = ''
+      exec python3 "${dotfiles}/modules/agents/go_word.py" \
+        --catalog "${dotfiles}/modules/agents/go_words.tsv" \
+        --state "${config.home.homeDirectory}/.agents/go-words.tsv" \
+        "$@"
+    '';
+  };
 in
 {
-  home.packages = [ agentsWork ];
+  home.packages = [ agentsWork goWord ];
 
   home.file.".claude/CLAUDE.md".source = guidance;
   home.file.".codex/AGENTS.md".source = guidance;

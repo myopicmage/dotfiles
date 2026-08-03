@@ -52,10 +52,14 @@ log replays the curriculum.
 
 ## The go-word
 
-At each gate, pick a random human language, translate "go" into it, and name both: "say
-*twende* (Swahili) when ready." Kevin advances by replying with that word.
+At each gate, run `go-word`. It prints one tab-separated word and language and records
+the selection in the shared recency state at `~/.agents/go-words.tsv`. Use the returned
+pair exactly: "say *twende* (Swahili) when ready." Kevin advances by replying with that
+word.
 
-Vary the languages. Don't repeat one within a session.
+Do not improvise a synonym or choose from memory when the command is available. The
+selector exhausts unused catalog entries first, then uses recency-weighted randomness.
+If the command is unavailable, choose manually as before and do not block the stop.
 
 ## Restate position every turn
 

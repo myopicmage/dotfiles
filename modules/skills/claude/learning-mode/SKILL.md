@@ -50,6 +50,12 @@ better, never where each file deserves its own explanation.
 **3. One commit per stop**, naming the failure mode or concept in the message, so the git
 log replays the curriculum.
 
+## Optional go-word
+
+Claude's normal gate remains an ordinary continuation from Kevin. If Kevin explicitly
+asks Claude to supply a go-word, run `go-word` and use the returned tab-separated word
+and language exactly. Do not turn this exception into automatic rotation.
+
 ## Restate position every turn
 
 Open each stop with where we are: "Stop 3 of 6. Last one: X. This one: Y."
