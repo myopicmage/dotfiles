@@ -34,12 +34,11 @@ in
   home.file.".codex/AGENTS.md".source = guidance;
   home.file.".agents/work/README.md".source = sharedWorkProtocol;
 
-  # Learning mode has one agent-specific difference: Codex rotates a translated
-  # go-word at each gate, while Claude waits for an ordinary continuation.
+  # Both agents share one learning loop, including the translated go-word gate.
   home.file.".claude/skills/learning-mode".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/modules/skills/claude/learning-mode";
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/modules/skills/learning-mode";
   home.file.".codex/skills/learning-mode".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/modules/skills/codex/learning-mode";
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/modules/skills/learning-mode";
 
   # Claude Code itself is the self-updating native build (~/.local/bin/claude),
   # not the brew cask or a pinned nixpkgs package, so it keeps auto-updating
