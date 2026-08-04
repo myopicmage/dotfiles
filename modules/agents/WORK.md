@@ -198,6 +198,21 @@ one. When the cursor and a decision artifact disagree, the artifact wins.
 This is what makes a possibly stale cursor safe. Without the durable artifact,
 a stale cursor silently discards decisions instead of merely lagging them.
 
+## Changed decisions are not corrections
+
+A later decision can supersede an earlier one because the earlier record was
+inaccurate, or because Kevin changed his mind. Those are different histories
+and the superseding artifact must say which one occurred.
+
+When Kevin changes his mind, record a new decision artifact that supersedes the
+earlier decision. State that the earlier artifact was accurate when written and
+name when or in what conversation the decision changed. Do not describe the
+change as a correction, misunderstanding, or agent misreading unless Kevin says
+the earlier record was wrong.
+
+When the reason for a changed decision is unknown, record only that the decision
+changed and ask Kevin before attributing the change to anyone's error.
+
 ## Cross-channel decisions
 
 Kevin speaks to each agent on a separate channel. No agent can see another's, so
