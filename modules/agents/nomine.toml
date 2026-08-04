@@ -1,23 +1,59 @@
 [[projects]]
+project = "babkabot"
+patrons = [{ name = "Elaine Benes" }]
+
+[[projects]]
+project = "BRBAviation"
+patrons = [
+  { name = "Wolfgang Langewiesche" },
+  { name = "Chris Lattner" },
+  { name = "Dale Klapmeier" },
+  { name = "Alan Klapmeier" },
+]
+
+[[projects]]
+project = "brbaviation.android"
+patrons = [
+  { name = "Jake Wharton" },
+  { name = "Dale Klapmeier" },
+  { name = "Alan Klapmeier" },
+]
+
+[[projects]]
 project = "conlang"
-patrons = ["Moluyo"]
+patrons = [{ name = "Moluyo" }]
 
 [[projects]]
 project = "dotfiles"
-patrons = ["Eelco Dolstra"]
+patrons = [{ name = "Eelco Dolstra" }]
 
 [[projects]]
 project = "formbuilder"
-patrons = ["Florence Nightingale", "Don Syme"]
+patrons = [{ name = "Florence Nightingale" }, { name = "Don Syme" }]
 
 [[projects]]
 project = "kevin_server"
-patrons = ["Joe Armstrong", "José Valim"]
+patrons = [{ name = "Joe Armstrong" }, { name = "José Valim" }]
 
 [[projects]]
 project = "readr"
-patrons = ["Simon Peyton Jones", "Philip Wadler"]
+patrons = [{ name = "Simon Peyton Jones" }, { name = "Philip Wadler" }]
+
+[[projects]]
+project = "rono-keyboard"
+patrons = [{ name = "Moluyo" }, { name = "Ken Kocienda" }]
 
 [[projects]]
 project = "specimens"
-patrons = ["Larry Wall", "Satan"]
+patrons = [{ name = "Larry Wall" }, { name = "Satan" }]
+
+[[projects]]
+project = "thisisnotarecipe.blog"
+patrons = [{ name = "Harold McGee" }]
+
+[[projects]]
+project = "writing"
+patrons = [
+  { name = "Frank Herbert" },
+  { name = "Terry Pratchett", invocation = "GNU Terry Pratchett" },
+]
