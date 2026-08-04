@@ -105,6 +105,42 @@ class AgentsWorkTests(unittest.TestCase):
         with self.assertRaises(agents_work.ValidationFailure):
             agents_work.publish(self.case, draft)
 
+    def test_publish_reports_a_missing_sequence_with_a_draft_hint(self) -> None:
+        text = artifact_text().replace("sequence = 1\n", "")
+
+        with self.assertRaises(agents_work.ValidationFailure) as raised:
+            agents_work.publish(self.case, self.prepare(text))
+
+        message = str(raised.exception)
+        self.assertIn("missing fields: sequence", message)
+        self.assertIn("agents-work draft", message)
+
+    def test_publish_reports_a_mistyped_sequence_with_a_draft_hint(self) -> None:
+        text = artifact_text().replace("sequence = 1", 'sequence = "1"')
+
+        with self.assertRaises(agents_work.ValidationFailure) as raised:
+            agents_work.publish(self.case, self.prepare(text))
+
+        message = str(raised.exception)
+        self.assertIn("sequence must be a positive integer", message)
+        self.assertIn("agents-work draft", message)
+
+    def test_publish_reports_missing_front_matter_with_a_draft_hint(self) -> None:
+        with self.assertRaises(agents_work.ValidationFailure) as raised:
+            agents_work.publish(self.case, self.prepare("# No front matter\n"))
+
+        message = str(raised.exception)
+        self.assertIn("missing TOML front matter", message)
+        self.assertIn("agents-work draft", message)
+
+    def test_publish_does_not_suggest_draft_for_a_missing_relationship(self) -> None:
+        text = artifact_text(responds_to=("001-missing-codex-a1b2c3.md",))
+
+        with self.assertRaises(agents_work.ValidationFailure) as raised:
+            agents_work.publish(self.case, self.prepare(text))
+
+        self.assertNotIn("agents-work draft", str(raised.exception))
+
     def test_validator_reports_orphan_sidecar(self) -> None:
         orphan = self.case / "001-test-plan-codex-a1b2c3.md.sha256"
         orphan.write_text("0" * 64 + "  artifact.md\n", encoding="ascii")
@@ -162,11 +198,11 @@ class AgentsWorkTests(unittest.TestCase):
 
         self.assertTrue(agents_work.validate_case(self.case))
 
-    def test_ready_for_implementation_is_resting(self) -> None:
+    def test_ready_for_implementation_may_name_the_resumption_owner(self) -> None:
         (self.case / "work.toml").write_text(
             manifest_text(
                 status="ready_for_implementation",
-                next_agent="",
+                next_agent="codex",
             ),
             encoding="utf-8",
         )
@@ -244,11 +280,40 @@ class AgentsWorkTests(unittest.TestCase):
         self.assertEqual("", self.read_manifest()["next_agent"])
         self.assertTrue(agents_work.validate_case(self.case))
 
-    def test_cursor_rejects_a_resting_status_with_an_agent(self) -> None:
+    def test_cursor_records_a_deferred_resumption_owner(self) -> None:
+        agents_work.cursor(
+            self.case,
+            {"status": "deferred", "next_agent": "codex"},
+        )
+
+        manifest = self.read_manifest()
+        self.assertEqual("deferred", manifest["status"])
+        self.assertEqual("codex", manifest["next_agent"])
+        self.assertTrue(agents_work.validate_case(self.case))
+
+    def test_cursor_records_a_ready_resumption_owner(self) -> None:
+        agents_work.cursor(
+            self.case,
+            {
+                "status": "ready_for_implementation",
+                "next_agent": "codex",
+            },
+        )
+
+        manifest = self.read_manifest()
+        self.assertEqual("ready_for_implementation", manifest["status"])
+        self.assertEqual("codex", manifest["next_agent"])
+        self.assertTrue(agents_work.validate_case(self.case))
+
+    def test_cursor_rejects_a_complete_status_with_an_agent(self) -> None:
         with self.assertRaises(agents_work.ValidationFailure):
             agents_work.cursor(
                 self.case,
-                {"status": "deferred", "next_agent": "codex"},
+                {
+                    "phase": "complete",
+                    "status": "complete",
+                    "next_agent": "codex",
+                },
             )
 
     def test_cursor_repairs_an_illegal_manifest(self) -> None:

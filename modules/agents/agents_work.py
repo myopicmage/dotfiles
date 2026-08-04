@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 import re
 import secrets
+import shlex
 import sys
 import tempfile
 import tomllib
@@ -88,7 +89,7 @@ def parse_front_matter(data: bytes, source: Path) -> dict[str, Any]:
     return parsed
 
 
-def validate_artifact_metadata(
+def artifact_field_errors(
     metadata: dict[str, Any], source: Path
 ) -> list[str]:
     errors: list[str] = []
@@ -115,7 +116,7 @@ def validate_artifact_metadata(
         errors.append(f"{source.name}: sequence must be a positive integer")
 
     kind = metadata["kind"]
-    if kind not in KINDS:
+    if not isinstance(kind, str) or kind not in KINDS:
         errors.append(
             f"{source.name}: kind must be one of {', '.join(sorted(KINDS))}"
         )
@@ -145,6 +146,14 @@ def validate_artifact_metadata(
         value = metadata.get(field, "")
         if not isinstance(value, str):
             errors.append(f"{source.name}: {field} must be a string")
+
+    return errors
+
+
+def validate_artifact_metadata(
+    metadata: dict[str, Any], source: Path
+) -> list[str]:
+    errors = artifact_field_errors(metadata, source)
 
     if not errors:
         expected = artifact_filename(metadata)
@@ -197,8 +206,8 @@ def coordination_errors(manifest: dict[str, Any], label: str) -> list[str]:
         errors.append(f"{label}: next_agent must be a string")
     elif status in ACTIVE_STATUSES and not next_agent:
         errors.append(f"{label}: active status requires next_agent")
-    elif status in RESTING_STATUSES and next_agent:
-        errors.append(f"{label}: resting status requires empty next_agent")
+    elif status == "complete" and next_agent:
+        errors.append(f"{label}: complete status requires empty next_agent")
 
     if phase == "complete" and status != "complete":
         errors.append(f"{label}: complete phase requires complete status")
@@ -345,12 +354,33 @@ def validate_case(case: Path) -> bool:
     return True
 
 
+def draft_hint(case: Path, metadata: dict[str, Any] | None = None) -> str:
+    kind = metadata.get("kind") if metadata is not None else None
+    author = metadata.get("author") if metadata is not None else None
+
+    kind_argument = kind if isinstance(kind, str) and kind in KINDS else "KIND"
+    author_argument = (
+        author
+        if isinstance(author, str) and SLUG_PATTERN.fullmatch(author)
+        else "AUTHOR"
+    )
+    return (
+        f"hint: agents-work draft {shlex.quote(str(case))} --kind {kind_argument} "
+        f"--author {author_argument} generates valid front matter"
+    )
+
+
 def validate_prepared_artifact(draft: Path, case: Path) -> dict[str, Any]:
     data = draft.read_bytes()
-    metadata = parse_front_matter(data, draft)
-    expected = artifact_filename(metadata)
-    synthetic = draft.with_name(expected)
-    errors = validate_artifact_metadata(metadata, synthetic)
+    try:
+        metadata = parse_front_matter(data, draft)
+    except ValidationFailure as error:
+        raise ValidationFailure(f"{error}\n{draft_hint(case)}") from error
+
+    errors = artifact_field_errors(metadata, draft)
+    if errors:
+        errors.append(draft_hint(case, metadata))
+        raise ValidationFailure("\n".join(errors))
 
     discovered = {path.name for path in discovered_artifacts(case)}
     for relationship in ("responds_to", "supersedes"):
@@ -702,10 +732,9 @@ def cursor(case: Path, updates: dict[str, str]) -> Path:
     merged = dict(manifest)
     merged.update(updates)
 
-    # A resting status requires an empty next_agent, so moving to one without
-    # naming an agent clears the field rather than failing on a value the
-    # caller never chose. An agent named explicitly still fails below, because
-    # that combination is a contradiction rather than an omission.
+    # A resting status is a gate, not permission to act. Moving to one without
+    # an explicit owner clears stale ownership. ready_for_implementation and
+    # deferred may keep an explicitly named resumption owner; complete may not.
     status = merged.get("status")
     if status in RESTING_STATUSES and "next_agent" not in updates:
         merged["next_agent"] = ""

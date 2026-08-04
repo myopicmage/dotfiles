@@ -306,8 +306,10 @@ The statuses are:
 - active: `drafting`, `awaiting_review`, `revision_requested`;
 - resting: `ready_for_implementation`, `deferred`, `complete`.
 
-An active status requires a non-empty `next_agent`. A resting status requires
-`next_agent` to be empty.
+An active status requires a non-empty `next_agent`. A resting status means no
+agent may act until Kevin instructs. `ready_for_implementation` and `deferred`
+may name the agent responsible for resuming when that instruction arrives;
+`complete` requires `next_agent` to be empty.
 
 `agents-work cursor` enforces all of this before writing, which makes it the
 preferred way to move the cursor: the rules live in the same code that
@@ -315,17 +317,22 @@ validates them, so the command cannot write a manifest that `validate` would
 reject. Hand-editing still works and carries exactly that risk; it has
 produced an out-of-vocabulary status once already.
 
-`ready_for_implementation` does not authorize action. It means planning has
-converged and awaits Kevin's instruction. Artifact presence is never an
-instruction to act.
+`ready_for_implementation` does not authorize action. It means the next step is
+ready and awaits Kevin's instruction, whether planning has converged or a
+learning-mode implementation stop has reached its gate. A named `next_agent`
+records who resumes; it is not permission to resume. Artifact presence is never
+an instruction to act.
 
 `work.toml` is authoritative for the current recorded coordination state, but
 it may be stale after concurrent work. Artifacts and Kevin's latest instruction
 are never discarded to make the cursor look consistent.
 
-The active/resting invariant detects malformed cursor pairs. It cannot detect a
-complete valid-to-valid cursor overwrite. Durable decision artifacts expose
-that semantic conflict.
+The cursor invariant detects an active status without an owner, a complete
+status with an owner, and invalid phase/status combinations. It cannot tell a
+deliberately retained owner from a stale owner on `ready_for_implementation` or
+`deferred`, nor detect a complete valid-to-valid cursor overwrite. The cursor
+command clears ownership by default when entering a resting status; durable
+decision artifacts expose semantic conflicts that structural validation cannot.
 
 ## Legacy migration
 
