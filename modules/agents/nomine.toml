@@ -5,3 +5,19 @@ patrons = ["Moluyo"]
 [[projects]]
 project = "dotfiles"
 patrons = ["Eelco Dolstra"]
+
+[[projects]]
+project = "formbuilder"
+patrons = ["Florence Nightingale", "Don Syme"]
+
+[[projects]]
+project = "kevin_server"
+patrons = ["Joe Armstrong", "José Valim"]
+
+[[projects]]
+project = "readr"
+patrons = ["Simon Peyton Jones", "Philip Wadler"]
+
+[[projects]]
+project = "specimens"
+patrons = ["Larry Wall", "Satan"]
