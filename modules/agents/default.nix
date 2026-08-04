@@ -9,6 +9,8 @@ let
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/modules/agents/GUIDANCE.md";
   sharedWorkProtocol =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/modules/agents/WORK.md";
+  nomine =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/modules/agents/nomine.toml";
   agentsWork = pkgs.writeShellApplication {
     name = "agents-work";
     runtimeInputs = [ pkgs.python3 ];
@@ -32,6 +34,7 @@ in
 
   home.file.".claude/CLAUDE.md".source = guidance;
   home.file.".codex/AGENTS.md".source = guidance;
+  home.file.".agents/nomine.toml".source = nomine;
   home.file.".agents/work/README.md".source = sharedWorkProtocol;
 
   # Both agents share one learning loop, including the translated go-word gate.

@@ -1,0 +1,7 @@
+[[projects]]
+project = "conlang"
+patrons = ["Moluyo"]
+
+[[projects]]
+project = "dotfiles"
+patrons = ["Eelco Dolstra"]
