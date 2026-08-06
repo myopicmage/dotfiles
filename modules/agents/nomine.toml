@@ -1,3 +1,11 @@
+[[agents]]
+agent = "claude"
+patrons = [{ name = "Dario Amodei" }]
+
+[[agents]]
+agent = "codex"
+patrons = [{ name = "Thibault Sottiaux", invocation = "PLEASE Tibo" }]
+
 [[projects]]
 project = "babkabot"
 patrons = [{ name = "Elaine Benes" }]
