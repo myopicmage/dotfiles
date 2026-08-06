@@ -1,6 +1,6 @@
 [[agents]]
 agent = "claude"
-patrons = [{ name = "Dario Amodei" }]
+patrons = [{ name = "Dario Amodei" }, { name = "Boris Cherny" }]
 
 [[agents]]
 agent = "codex"
