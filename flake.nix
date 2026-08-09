@@ -3,6 +3,10 @@
 
   inputs = {
     flake-parts.url = "github:hercules-ci/flake-parts";
+    herdr = {
+      url = "github:herdrdev/herdr/v0.8.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixos-unified.url = "github:srid/nixos-unified";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nix-darwin = {
@@ -29,6 +33,7 @@
               {
                 home-manager.users.${username} = {
                   imports = [ ./home.nix ];
+                  home.packages = [ inputs.herdr.packages.${platform}.default ];
                 };
               }
             ];
