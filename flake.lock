@@ -60,6 +60,30 @@
         "type": "github"
       }
     },
+    "kevin-server": {
+      "inputs": {
+        "nix-darwin": [
+          "nix-darwin"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1786670489,
+        "narHash": "sha256-1Fh+Z4qQ/URrPO2oGP2ukylCIkfZVSyzGTIuckGB26Y=",
+        "ref": "refs/heads/main",
+        "rev": "d20b7bef71d6e199e38a751e99892dd92c501d03",
+        "revCount": 92,
+        "type": "git",
+        "url": "ssh://git@github.com/myopicmage/kevin_server.git"
+      },
+      "original": {
+        "rev": "d20b7bef71d6e199e38a751e99892dd92c501d03",
+        "type": "git",
+        "url": "ssh://git@github.com/myopicmage/kevin_server.git"
+      }
+    },
     "nix-darwin": {
       "inputs": {
         "nixpkgs": [
@@ -132,6 +156,7 @@
         "flake-parts": "flake-parts",
         "herdr": "herdr",
         "home-manager": "home-manager",
+        "kevin-server": "kevin-server",
         "nix-darwin": "nix-darwin",
         "nixos-unified": "nixos-unified",
         "nixpkgs": "nixpkgs"

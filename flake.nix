@@ -7,6 +7,11 @@
       url = "github:herdrdev/herdr/v0.8.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    kevin-server = {
+      url = "git+ssh://git@github.com/myopicmage/kevin_server.git?rev=d20b7bef71d6e199e38a751e99892dd92c501d03";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nix-darwin.follows = "nix-darwin";
+    };
     nixos-unified.url = "github:srid/nixos-unified";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nix-darwin = {
@@ -29,6 +34,7 @@
             nixpkgs.hostPlatform = platform;
             system.primaryUser = username;
             imports = [
+              inputs.kevin-server.darwinModules.default
               ./config.nix
               {
                 home-manager.users.${username} = {
